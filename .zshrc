@@ -1,4 +1,5 @@
 zstyle ":completion:*:commands" rehash 1
+autoload -U zmv
 #PHPのパス
 export PATH="/opt/homebrew/opt/php@7.4/bin:$PATH"
 export PATH="/opt/homebrew/opt/php@7.4/sbin:$PATH"
