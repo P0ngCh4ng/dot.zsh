@@ -1,3 +1,4 @@
+zstyle ":completion:*:commands" rehash 1
 #PHPのパス
 export PATH="/opt/homebrew/opt/php@7.4/bin:$PATH"
 export PATH="/opt/homebrew/opt/php@7.4/sbin:$PATH"
@@ -13,15 +14,20 @@ if type brew &>/dev/null; then
 
     autoload -Uz compinit
     compinit
-  fi
+fi
+
+PROMPT='%F{034}%n%f %F{036}($(arch))%f:%F{020}%~%f $(git_super_status)'
+PROMPT+=""$'\n'"%# "
 
 export ZPLUG_HOME=/opt/homebrew/opt/zplug
 source $ZPLUG_HOME/init.zsh
+
 
 zplug 'zsh-users/zsh-autosuggestions'
 zplug 'zsh-users/zsh-completions'
 zplug 'zsh-users/zsh-syntax-highlighting'
 zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
+zplug "woefe/git-prompt.zsh"
 # 未インストール項目をインストールする
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
