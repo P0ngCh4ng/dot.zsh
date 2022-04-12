@@ -64,3 +64,14 @@ eval-and-compile
 (set-face-attribute 'show-paren-match nil
 :background 'unspecified)
 (set-face-underline-p 'show-paren-match "red")
+
+(leaf php-mode
+  :ensure t
+  )
+(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist")))
+
+
+
+
+
+
