@@ -68,10 +68,5 @@ eval-and-compile
 (leaf php-mode
   :ensure t
   )
-(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist")))
-
-
-
-
-
-
+(custom-set-variables '( backup-directory-alist '((".*" . "~/.emacs.d/.ehist"))))
+(electric-pair-mode t)
