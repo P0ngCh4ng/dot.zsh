@@ -1,4 +1,5 @@
 ;; load-pathを追加する関数を定義
+
 (defun add-to-load-path (&rest paths)
   (let (path)
     (dolist (path paths paths)
@@ -17,17 +18,14 @@
 ;; カスタムファイルを読み込む
 (load custom-file)
 (require 'package) 			;package.elを有効化
-eval-and-compile
   (customize-set-variable
    'package-archives '(("org" . "https://orgmode.org/elpa/")
                        ("melpa" . "https://melpa.org/packages/")
                        ("gnu" . "https://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (unless (package-installed-p 'leaf)
+(package-initialize)
+(unless (package-installed-p 'leaf)
     (package-refresh-contents)
     (package-install 'leaf))
-
-
 (load-theme 'zenburn t)
 (leaf flycheck
   :doc "On-the-fly syntax checking"
@@ -63,10 +61,14 @@ eval-and-compile
 ;; フェイスを変更する
 (set-face-attribute 'show-paren-match nil
 :background 'unspecified)
-(set-face-underline-p 'show-paren-match "red")
+(set-face-underline 'show-paren-match "red")
 
 (leaf php-mode
   :ensure t
   )
-(custom-set-variables '( backup-directory-alist '((".*" . "~/.emacs.d/.ehist"))))
+
 (electric-pair-mode t)
+
+(custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+(custom-set-variables '(make-backup-files t)) 
