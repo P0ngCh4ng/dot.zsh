@@ -37,7 +37,7 @@
   :bind (("M-n" . flycheck-next-error)
          ("M-p" . flycheck-previous-error))
   :global-minor-mode global-flycheck-mode)
-
+(exec-path-from-shell-initialize)
 ;; 更新されたファイルを自動的に読み込み直す
 (global-auto-revert-mode t)
 ;; 現在行のハイライト
@@ -66,9 +66,24 @@
 (leaf php-mode
   :ensure t
   )
+(leaf rust-mode
+  :ensure t
+  :custom rust-format-on-save t)
+(leaf cargo
+  :ensure t
+  :hook (rust-mode . cargo-minor-mode))
+
+(leaf lsp-mode
+  :ensure t
+  :init (yas-global-mode)
+  :hook (rust-mode . lsp)
+  :bind ("C-c h". lep-describe-thing-at-point)
+  :custom (lsp-rust-server 'rust-analyzer))
+(leaf lsp-ui
+  :ensure t)
 
 (electric-pair-mode t)
 
 (custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
-(custom-set-variables '(make-backup-files t)) 
+(setq make-backup-files nil)
