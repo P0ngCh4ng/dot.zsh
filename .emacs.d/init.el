@@ -8,6 +8,8 @@
 	(add-to-list 'load-path default-directory)
 	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
 	    (normal-top-level-add-subdirs-to-load-path))))))
+
+
 ;; 引数ディレクトリとそのサブディレクトリをload-pathに追加
 (add-to-load-path "elisp" "conf" "public_repos")
 ;;  カスタムファイルを別ファイルにする
@@ -75,15 +77,28 @@
 
 (leaf lsp-mode
   :ensure t
-  :init (yas-global-mode)
   :hook (rust-mode . lsp)
+  (typescript-mode-hook . lsp)
   :bind ("C-c h". lep-describe-thing-at-point)
   :custom (lsp-rust-server 'rust-analyzer))
 (leaf lsp-ui
   :ensure t)
 
+(leaf typescript-mode
+  :ensure t
+  :custom
+  (typescript-indent-level . 2)
+  )
 (electric-pair-mode t)
 
 (custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (setq make-backup-files nil)
+
+(leaf projectile
+  :ensure t t
+  :init
+  :config
+  (setq projectile-mode-line-prefix " Prj")
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))

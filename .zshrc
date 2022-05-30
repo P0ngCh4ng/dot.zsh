@@ -15,7 +15,6 @@ if type brew &>/dev/null; then
     autoload -Uz compinit
     compinit
 fi
-
 PROMPT='%F{034}%n%f %F{036}($(arch))%f:%F{020}%~%f $(git_super_status)'
 PROMPT+=""$'\n'"%# "
 
