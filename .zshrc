@@ -6,6 +6,7 @@ export PATH="/opt/homebrew/opt/php@7.4/sbin:$PATH"
 #mysqlのパス
 export PATH="/opt/homebrew/opt/mysql@5.7/bin:$PATH"
 export PATH=/opt/homebrew/opt/python@3.9/libexec/bin:$PATH
+export PATH="$VOLTA_HOME/bin:$PATH"
 #Brewのパスを通す
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -15,6 +16,7 @@ if type brew &>/dev/null; then
     autoload -Uz compinit
     compinit
 fi
+export VOLT_HOME="$HOME/.volta"
 PROMPT='%F{034}%n%f %F{036}($(arch))%f:%F{020}%~%f $(git_super_status)'
 PROMPT+=""$'\n'"%# "
 
@@ -37,3 +39,5 @@ fi
 
 # コマンドをリンクして、PATH に追加し、プラグインは読み込む
 zplug load --verbose
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"

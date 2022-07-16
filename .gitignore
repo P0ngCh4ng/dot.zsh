@@ -8,3 +8,7 @@
 /.emacs.d/.ehist
 /*~
 .DS_Store
+/.emacs.d/TAGS
+/.emacs.d/.*/
+/.emacs.d/.*
+/.emacs.d/*.cache

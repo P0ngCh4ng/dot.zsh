@@ -40,6 +40,8 @@
          ("M-p" . flycheck-previous-error))
   :global-minor-mode global-flycheck-mode)
 (exec-path-from-shell-initialize)
+(set-language-environment  'utf-8)
+(prefer-coding-system 'utf-8)
 ;; 更新されたファイルを自動的に読み込み直す
 (global-auto-revert-mode t)
 ;; 現在行のハイライト
@@ -64,7 +66,7 @@
 (set-face-attribute 'show-paren-match nil
 :background 'unspecified)
 (set-face-underline 'show-paren-match "red")
-
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 (leaf php-mode
   :ensure t
   )
@@ -88,7 +90,8 @@
   :ensure t
   :custom
   (typescript-indent-level . 2)
-  )
+ )
+
 (electric-pair-mode t)
 
 (custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
@@ -102,3 +105,116 @@
   (setq projectile-mode-line-prefix " Prj")
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+(when (require 'projectile nil t)ph
+  (projectile-mode)
+  (add-to-list
+   'projectile-globally-ignored-directories
+   "node-modules")
+  (setq projectile-enable-caching t))
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
+
+(when (equal window-system 'mac)
+  (setq mac-function-modifier 'meta)
+  (setq mac-option-modifier 'meta)
+  (setq mac-command-modifier 'super)
+  (global-set-key (kbd "s-x") 'kill-region)
+  (global-set-key (kbd "s-c") 'kill-ring-save)
+  (global-set-key (kbd "s-v") 'yank)
+  (global-set-key (kbd "s-a") 'mark-whole-buffer)
+  (global-set-key (kbd "s-s") 'save-buffer)
+  (global-set-key (kbd "s-z") 'undo)
+  (global-set-key (kbd "s-+") 'text-scale-adjust)
+  (global-set-key (kbd "s--") 'text-scale-adjust))
+
+(leaf haskell-mode
+  :ensure t
+  :after t
+  :defvar flycheck-error-list-buffer
+  :custom
+  (haskell-hoogle-command . nil)
+  (haskell-hoogle-url . "https://www.stackage.org/lts/hoogle?q=%s")
+  :init
+  (defun haskell-repl-and-flycheck ()
+    (interactive)
+    (delete-other-windows)
+    (flycheck-list-errors)
+    (haskell-process-load-file)
+    (haskell-interactive-switch)
+    (split-window-below)
+    (other-window 1)
+    (switch-to-buffer flycheck-error-list-buffer)
+    (other-window 1))
+  :bind (:haskell-mode-map
+         ("M-i" . stylish-haskell-toggle)
+         ("C-M-z" . haskell-repl-and-flycheck)
+         ("C-c C-b" . haskell-hoogle)
+         ("C-c C-c" . haskell-session-change-target)
+         ("C-c C-l" . haskell-process-load-file)
+         ("C-c C-z" . haskell-interactive-switch)
+         ([remap indent-whole-buffer] . haskell-mode-stylish-buffer))
+  :config
+  (add-to-list 'safe-local-variable-values '(haskell-indent-spaces . 4))
+  (add-to-list 'safe-local-variable-values '(haskell-process-use-ghci . t))
+  (leaf lsp-haskell
+    :ensure t
+    :hook (haskell-mode-hook . lsp)
+    :custom
+    ;; フォーマッターをfourmoluにします。fourmoluのデフォルト値も気に入らないがカスタマイズ出来るだけマシ。
+    (lsp-haskell-formatting-provider . "fourmolu")
+    ;; 補完時にスニペット展開(型が出てくるやつ)を行わないようにします。
+    (lsp-haskell-completion-snippets-on . nil)
+    ;; 関数補完からの自動importはcompanyから誤爆する可能性が高すぎるので無効化します。
+    (lsp-haskell-plugin-ghcide-completions-config-auto-extend-on . nil)
+    ;; importされたものが出てくる機能自体の思想は分かり易くて良いのですが、スクロール周りがすごい面倒になるので無効化。
+    (lsp-haskell-plugin-import-lens-code-lens-on . nil)
+    :defun
+    lsp-code-actions-at-point
+    lsp:code-action-title
+    :init
+    (defun lsp-haskell-execute-code-action-add-signature ()
+      "Execute code action of add signature.
+Add the type signature that GHC infers to the function located below the point."
+      (interactive)
+      (let ((action (seq-find
+                     (lambda (e) (string-prefix-p "add signature" (lsp:code-action-title e)))
+                     (lsp-code-actions-at-point))))
+        (if action
+            (lsp-execute-code-action action)
+          (message "I can't find add signature action for this point"))))
+    :bind (:haskell-mode-map
+           ("C-c C-o" . lsp-haskell-execute-code-action-add-signature)))
+  (leaf haskell-customize
+    :defvar haskell-stylish-on-save
+    :init
+    (eval-and-compile
+      (defun stylish-haskell-enable ()
+        "保存したときに自動的にstylish-haskellを適用する。"
+        (interactive)
+        (setq-local haskell-stylish-on-save t))
+      (defun stylish-haskell-disable ()
+        (interactive)
+        (setq-local haskell-stylish-on-save nil))
+      (defun stylish-haskell-toggle ()
+        (interactive)
+        (setq-local haskell-stylish-on-save (not haskell-stylish-on-save)))
+      (defun stylish-haskell-setup ()
+        "プロジェクトディレクトリにstylish-haskellの設定ファイルがある場合、保存したときに自動的にstylish-haskellを適用する。"
+        (if (locate-dominating-file default-directory ".stylish-haskell.yaml")
+            (stylish-haskell-enable)
+          (stylish-haskell-disable))))
+    :hook (haskell-mode-hook . stylish-haskell-setup))
+  (leaf haskell-interactive-mode
+    :after t
+    :defvar haskell-interactive-mode-map
+    :config (dvorak-set-key-prog haskell-interactive-mode-map))
+  (leaf haskell-cabal
+    :defvar haskell-cabal-mode-map
+    :config (dvorak-set-key-prog haskell-cabal-mode-map)))
+
+
+(leaf helm
+  :ensure t
+  ::config
+  )
