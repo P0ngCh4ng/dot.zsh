@@ -12,3 +12,5 @@
 /.emacs.d/.*/
 /.emacs.d/.*
 /.emacs.d/*.cache
+/.emacs.d/recentf
+/.emacs.d/init.elc

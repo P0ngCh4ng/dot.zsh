@@ -9,7 +9,7 @@
 	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
 	    (normal-top-level-add-subdirs-to-load-path))))))
 
-
+(setenv "LANG" "en_US.UTF-8")
 ;; 引数ディレクトリとそのサブディレクトリをload-pathに追加
 (add-to-load-path "elisp" "conf" "public_repos")
 ;;  カスタムファイルを別ファイルにする
@@ -28,6 +28,18 @@
 (unless (package-installed-p 'leaf)
     (package-refresh-contents)
     (package-install 'leaf))
+(leaf leaf-keywords
+    :ensure t
+    :init
+    ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
+    (leaf hydra :ensure t)
+    (leaf el-get :ensure t)
+    (leaf blackout :ensure t)
+
+    :config
+    ;; initialize leaf-keywords.el
+    (leaf-keywords-init))
+
 (load-theme 'zenburn t)
 (leaf flycheck
   :doc "On-the-fly syntax checking"
@@ -42,21 +54,14 @@
 (exec-path-from-shell-initialize)
 (set-language-environment  'utf-8)
 (prefer-coding-system 'utf-8)
+(custom-set-variables '(default-tab-width 4))
 ;; 更新されたファイルを自動的に読み込み直す
 (global-auto-revert-mode t)
-;; 現在行のハイライト
-(defface my-hl-line-face
-  ;; 背景がdarkなら背景色を紺に
-  '((((class color)(background dark))
-     (:background "NavyBlue" t))
-    ;; 背景がlightならば背景色を青に
-    (((class color)(background light))
-     (:background "LightSkyBlue"t))
-    (t (:bold t)))
-  "hi-line's my face")
-(custom-set-variables '( hl-line-face 'my-hl-line-face))
 (global-hl-line-mode t)
-
+(custom-set-faces
+ '(hl-line ((t (:background "SteelBlue4")))))
+(global-set-key (kbd "C-x o") 'ace-window)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 ;; paren-mode :対応する括弧を強調して表示する
 (custom-set-variables '(show-paren-delay 0))		;表示までの秒数。　初期値は0.125
 (show-paren-mode t )			;有効化
@@ -80,17 +85,22 @@
 (leaf lsp-mode
   :ensure t
   :hook (rust-mode . lsp)
-  (typescript-mode-hook . lsp)
+  (Typescript-mode-hook . lsp)
   :bind ("C-c h". lep-describe-thing-at-point)
   :custom (lsp-rust-server 'rust-analyzer))
 (leaf lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+(leaf company
   :ensure t)
+(global-company-mode) ; 全バッファで有効にする 
+(setq lsp-completion-provider t)
 
 (leaf typescript-mode
   :ensure t
   :custom
   (typescript-indent-level . 2)
- )
+)
 
 (electric-pair-mode t)
 
@@ -106,7 +116,7 @@
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
-(when (require 'projectile nil t)ph
+(when (require 'projectile nil t)
   (projectile-mode)
   (add-to-list
    'projectile-globally-ignored-directories
@@ -156,8 +166,9 @@
          ([remap indent-whole-buffer] . haskell-mode-stylish-buffer))
   :config
   (add-to-list 'safe-local-variable-values '(haskell-indent-spaces . 4))
-  (add-to-list 'safe-local-variable-values '(haskell-process-use-ghci . t))
-  (leaf lsp-haskell
+  (add-to-list 'safe-local-variable-values '(haskell-process-use-ghci . t)))
+
+(leaf lsp-haskell
     :ensure t
     :hook (haskell-mode-hook . lsp)
     :custom
@@ -172,20 +183,8 @@
     :defun
     lsp-code-actions-at-point
     lsp:code-action-title
-    :init
-    (defun lsp-haskell-execute-code-action-add-signature ()
-      "Execute code action of add signature.
-Add the type signature that GHC infers to the function located below the point."
-      (interactive)
-      (let ((action (seq-find
-                     (lambda (e) (string-prefix-p "add signature" (lsp:code-action-title e)))
-                     (lsp-code-actions-at-point))))
-        (if action
-            (lsp-execute-code-action action)
-          (message "I can't find add signature action for this point"))))
-    :bind (:haskell-mode-map
-           ("C-c C-o" . lsp-haskell-execute-code-action-add-signature)))
-  (leaf haskell-customize
+    )
+(leaf haskell-customize
     :defvar haskell-stylish-on-save
     :init
     (eval-and-compile
@@ -207,11 +206,9 @@ Add the type signature that GHC infers to the function located below the point."
     :hook (haskell-mode-hook . stylish-haskell-setup))
   (leaf haskell-interactive-mode
     :after t
-    :defvar haskell-interactive-mode-map
-    :config (dvorak-set-key-prog haskell-interactive-mode-map))
+    :defvar haskell-interactive-mode-map)
   (leaf haskell-cabal
-    :defvar haskell-cabal-mode-map
-    :config (dvorak-set-key-prog haskell-cabal-mode-map)))
+    :defvar haskell-cabal-mode-map)
 
 
 (leaf helm
