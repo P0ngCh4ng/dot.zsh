@@ -15,3 +15,4 @@
 /.emacs.d/recentf
 /.emacs.d/init.elc
 /.emacs.d/projectile-bookmarks.eld
+/.emacs.d/custom.el
