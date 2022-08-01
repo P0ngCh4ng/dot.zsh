@@ -8,7 +8,7 @@
 	(add-to-list 'load-path default-directory)
 	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
 	    (normal-top-level-add-subdirs-to-load-path))))))
-
+(add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
 (setenv "LANG" "en_US.UTF-8")
 ;; 引数ディレクトリとそのサブディレクトリをload-pathに追加
 (add-to-load-path "elisp" "conf" "public_repos")
@@ -19,12 +19,14 @@
   (write-region "" nil custom-file))
 ;; カスタムファイルを読み込む
 (load custom-file)
-(require 'package) 			;package.elを有効化
+(require 'package)		;package.elを有効化
   (customize-set-variable
    'package-archives '(("org" . "https://orgmode.org/elpa/")
                        ("melpa" . "https://melpa.org/packages/")
                        ("gnu" . "https://elpa.gnu.org/packages/")))
+
 (package-initialize)
+
 (unless (package-installed-p 'leaf)
     (package-refresh-contents)
     (package-install 'leaf))
@@ -39,90 +41,14 @@
     :config
     ;; initialize leaf-keywords.el
     (leaf-keywords-init))
+(keyboard-translate ?\C-h ?\C-?)
+(define-key global-map [?¥] [?\\])
+(setq inhibit-startup-screen t)
+
+
 
 (load-theme 'zenburn t)
-(leaf flycheck
-  :doc "On-the-fly syntax checking"
-  :req "dash-2.12.1" "pkg-info-0.4" "let-alist-1.0.4" "seq-1.11" "emacs-24.3"
-  :tag "minor-mode" "tools" "languages" "convenience" "emacs>=24.3"
-  :url "http://www.flycheck.org"
-  :emacs>= 24.3
-  :ensure t
-  :bind (("M-n" . flycheck-next-error)
-         ("M-p" . flycheck-previous-error))
-  :global-minor-mode global-flycheck-mode)
-(exec-path-from-shell-initialize)
-(set-language-environment  'utf-8)
-(prefer-coding-system 'utf-8)
-(custom-set-variables '(default-tab-width 4))
-;; 更新されたファイルを自動的に読み込み直す
-(global-auto-revert-mode t)
-(global-hl-line-mode t)
-(custom-set-faces
- '(hl-line ((t (:background "SteelBlue4")))))
-(global-set-key (kbd "C-x o") 'ace-window)
-(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-;; paren-mode :対応する括弧を強調して表示する
-(custom-set-variables '(show-paren-delay 0))		;表示までの秒数。　初期値は0.125
-(show-paren-mode t )			;有効化
-;; parenのスタイル : expressionは括弧内も強調表示
-(custom-set-variables '(show-paren-style 'expression))
-;; フェイスを変更する
-(set-face-attribute 'show-paren-match nil
-:background 'unspecified)
-(set-face-underline 'show-paren-match "red")
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-(leaf php-mode
-  :ensure t
-  )
-(leaf rust-mode
-  :ensure t
-  :custom rust-format-on-save t)
-(leaf cargo
-  :ensure t
-  :hook (rust-mode . cargo-minor-mode))
 
-(leaf lsp-mode
-  :ensure t
-  :hook (rust-mode . lsp)
-  (Typescript-mode-hook . lsp)
-  :bind ("C-c h". lep-describe-thing-at-point)
-  :custom (lsp-rust-server 'rust-analyzer))
-(leaf lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-(leaf company
-  :ensure t)
-(global-company-mode) ; 全バッファで有効にする 
-(setq lsp-completion-provider t)
-
-(leaf typescript-mode
-  :ensure t
-  :custom
-  (typescript-indent-level . 2)
-)
-
-(electric-pair-mode t)
-
-(custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
-
-(setq make-backup-files nil)
-
-(leaf projectile
-  :ensure t t
-  :init
-  :config
-  (setq projectile-mode-line-prefix " Prj")
-  (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-
-(when (require 'projectile nil t)
-  (projectile-mode)
-  (add-to-list
-   'projectile-globally-ignored-directories
-   "node-modules")
-  (setq projectile-enable-caching t))
-(setq projectile-completion-system 'helm)
 (helm-projectile-on)
 
 (when (equal window-system 'mac)
@@ -149,7 +75,6 @@
   (defun haskell-repl-and-flycheck ()
     (interactive)
     (delete-other-windows)
-    (flycheck-list-errors)
     (haskell-process-load-file)
     (haskell-interactive-switch)
     (split-window-below)
@@ -215,3 +140,4 @@
   :ensure t
   ::config
   )
+(put 'dired-find-alternate-file 'disabled nil)
