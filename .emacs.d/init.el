@@ -64,6 +64,9 @@
   (global-set-key (kbd "s-+") 'text-scale-adjust)
   (global-set-key (kbd "s--") 'text-scale-adjust))
 
+(leaf python-mode
+  :ensure t)
+
 (leaf haskell-mode
   :ensure t
   :after t

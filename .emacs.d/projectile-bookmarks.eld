@@ -1,1 +1,0 @@
-("~/dotfiles/" "~/electron-react-ts-main/" "~/WebShiori/" "~/flip_stickeis/" "~/clinic-r/" "~/P0ngCh4ng/")
