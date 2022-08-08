@@ -12,6 +12,7 @@
 (setenv "LANG" "en_US.UTF-8")
 ;; 引数ディレクトリとそのサブディレクトリをload-pathに追加
 (add-to-load-path "elisp" "conf" "public_repos")
+
 ;;  カスタムファイルを別ファイルにする
 (custom-set-variables '( custom-file(locate-user-emacs-file "custom.el")))
 ;; カスタムファイルが存在しない場合は作成する
@@ -161,3 +162,46 @@
   ::config
   )
 (put 'dired-find-alternate-file 'disabled nil)
+
+
+
+
+
+
+
+
+
+;; Org-captureの設定
+
+;; Org-captureを呼び出すキーシーケンス
+(define-key global-map "\C-cc" 'org-capture)
+;; Org-captureのテンプレート（メニュー）の設定
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/org/gtd.org" "INBOX")
+	 "* TODO %?\n %i\n %a")
+	("n" "Note" entry (file+headline "~/org/notes.org" "Notes")
+	 "* %?\nEntered on %U\n %i\n %a")
+	))
+;; メモをC-M-^一発で見るための設定
+;; https://qiita.com/takaxp/items/0b717ad1d0488b74429d から拝借
+(defun show-org-buffer (file)
+  "Show an org-file FILE on the current buffer."
+  (interactive)
+  (if (get-buffer file)
+      (let ((buffer (get-buffer file)))
+        (switch-to-buffer buffer)
+        (message "%s" file))
+    (find-file (concat "~//org/" file))))
+(global-set-key (kbd "C-M-^") (lambda () (interactive)
+                                 (show-org-buffer "notes.org")))
+
+(setq org-log-done 'time)
+(setq org-todo-keywords
+  '((sequence "TODO(t)" "SOMEDAY(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c@)")))
+
+
+
+
+
+
+
