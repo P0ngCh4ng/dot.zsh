@@ -43,6 +43,7 @@
     ;; initialize leaf-keywords.el
     (leaf-keywords-init))
 (keyboard-translate ?\C-h ?\C-?)
+(global-set-key (kbd "C-?") 'help-for-help)
 (define-key global-map [?¥] [?\\])
 (setq inhibit-startup-screen t)
 (leaf switch-window
@@ -65,7 +66,7 @@
 
 (global-set-key (kbd "C-x 4 0") 'switch-window-then-kill-buffer)
 
-(load-theme 'zenburn t)
+
 
 (helm-projectile-on)
 
@@ -81,6 +82,88 @@
   (global-set-key (kbd "s-z") 'undo)
   (global-set-key (kbd "s-+") 'text-scale-adjust)
   (global-set-key (kbd "s--") 'text-scale-adjust))
+
+
+(load-theme 'zenburn t)
+(leaf flycheck
+  :doc "On-the-fly syntax checking"
+  :req "dash-2.12.1" "pkg-info-0.4" "let-alist-1.0.4" "seq-1.11" "emacs-24.3"
+  :tag "minor-mode" "tools" "languages" "convenience" "emacs>=24.3"
+  :url "http://www.flycheck.org"
+  :emacs>= 24.3
+  :ensure t
+  :bind (("M-n" . flycheck-next-error)
+         ("M-p" . flycheck-previous-error))
+  :config
+  (setq flycheck-highlighting-mode 'lines  ;; columns symbolsm sexps lines
+	flycheck-check-syntax-automatically '(save))
+  :global-minor-mode global-flycheck-mode)
+(exec-path-from-shell-initialize)
+(set-language-environment  'utf-8)
+(prefer-coding-system 'utf-8)
+(custom-set-variables '(default-tab-width 4))
+;; 更新されたファイルを自動的に読み込み直す
+(global-auto-revert-mode t)
+(global-hl-line-mode t)
+(custom-set-faces
+ '(hl-line ((t (:background "SteelBlue4")))))
+(global-set-key (kbd "C-x o") 'ace-window)
+
+;; paren-mode :対応する括弧を強調して表示する
+(custom-set-variables '(show-paren-delay 0))		;表示までの秒数。　初期値は0.125
+(show-paren-mode t )			;有効化
+;; parenのスタイル : expressionは括弧内も強調表示
+(custom-set-variables '(show-paren-style 'expression))
+;; フェイスを変更する
+(set-face-attribute 'show-paren-match nil
+:background 'unspecified)
+(set-face-underline 'show-paren-match "red")
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+(leaf php-mode
+  :ensure t
+  )
+(leaf rust-mode
+  :ensure t
+  :custom rust-format-on-save t)
+(leaf cargo
+  :ensure t
+@p  :hook (rust-mode . cargo-minor-mode))
+
+(leaf lsp-mode
+  :ensure t
+  :hook (rust-mode . lsp)
+  (Typescript-mode-hook . lsp)
+  :bind ("C-c h". lep-describe-thing-at-point)
+  :custom (lsp-rust-server 'rust-analyzer))
+(leaf lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+(leaf company
+  :ensure t)
+(global-company-mode) ; 全バッファで有効にする 
+
+
+(leaf typescript-mode
+  :ensure t
+  :custom
+  (typescript-indent-level . 2)
+)
+
+(electric-pair-mode t)
+
+(custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+(setq make-backup-files nil)
+
+(leaf projectile
+  :ensure t t
+  :init
+  :config
+  (projectile-mode +1)
+  )
+(load-theme 'zenburn t)
+
+
 
 (leaf python-mode
   :ensure t)
@@ -168,7 +251,8 @@
 
 
 
-
+(leaf org-capture
+  :ensure t)
 
 
 ;; Org-captureの設定
