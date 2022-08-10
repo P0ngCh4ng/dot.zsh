@@ -48,8 +48,8 @@
 (setq inhibit-startup-screen t)
 (leaf switch-window
   :ensure  t
-  :config
-  (setq switch-window-shortcut-style 'qwerty))
+  )
+(setq switch-window-shortcut-style 'qwerty)
 (global-set-key (kbd "C-x o") 'switch-window)
 (global-set-key (kbd "C-x 1") 'switch-window-then-maximize)
 (global-set-key (kbd "C-x 2") 'switch-window-then-split-below)
@@ -94,10 +94,9 @@
   :ensure t
   :bind (("M-n" . flycheck-next-error)
          ("M-p" . flycheck-previous-error))
-  :config
-  (setq flycheck-highlighting-mode 'lines  ;; columns symbolsm sexps lines
-	flycheck-check-syntax-automatically '(save))
   :global-minor-mode global-flycheck-mode)
+ (setq flycheck-highlighting-mode 'lines  ;; columns symbolsm sexps lines
+	flycheck-check-syntax-automatically '(save))
 (exec-path-from-shell-initialize)
 (set-language-environment  'utf-8)
 (prefer-coding-system 'utf-8)
@@ -107,7 +106,7 @@
 (global-hl-line-mode t)
 (custom-set-faces
  '(hl-line ((t (:background "SteelBlue4")))))
-(global-set-key (kbd "C-x o") 'ace-window)
+
 
 ;; paren-mode :対応する括弧を強調して表示する
 (custom-set-variables '(show-paren-delay 0))		;表示までの秒数。　初期値は0.125
@@ -127,7 +126,7 @@
   :custom rust-format-on-save t)
 (leaf cargo
   :ensure t
-@p  :hook (rust-mode . cargo-minor-mode))
+  :hook (rust-mode . cargo-minor-mode))
 
 (leaf lsp-mode
   :ensure t
@@ -148,6 +147,14 @@
   :custom
   (typescript-indent-level . 2)
 )
+(leaf prettier-js
+  :ensure t)
+(add-hook 'js-mode-hook 'prettier-js-mode)
+(add-hook 'typescript-mode-hook 'prettier-js-mode)
+(add-hook 'js-mode-hook
+  (lambda ()
+    (add-hook 'after-save-hook 'prettier t t)))
+
 
 (electric-pair-mode t)
 
