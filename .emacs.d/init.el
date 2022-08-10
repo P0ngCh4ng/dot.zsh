@@ -20,18 +20,23 @@
   (write-region "" nil custom-file))
 ;; カスタムファイルを読み込む
 (load custom-file)
-(require 'package)		;package.elを有効化
+(eval-and-compile
+  (when (or load-file-name byte-compile-current-file)
+    (setq user-emacs-directory
+          (expand-file-name
+           (file-name-directory (or load-file-name byte-compile-current-file))))))
+
+(eval-and-compile
   (customize-set-variable
-   'package-archives '(("org" . "https://orgmode.org/elpa/")
+   'package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
                        ("melpa" . "https://melpa.org/packages/")
-                       ("gnu" . "https://elpa.gnu.org/packages/")))
-
-(package-initialize)
-
-(unless (package-installed-p 'leaf)
+                       ("org"   . "https://orgmode.org/elpa/")))
+  (package-initialize)
+  (unless (package-installed-p 'leaf)
     (package-refresh-contents)
     (package-install 'leaf))
-(leaf leaf-keywords
+
+  (leaf leaf-keywords
     :ensure t
     :init
     ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
@@ -41,13 +46,14 @@
 
     :config
     ;; initialize leaf-keywords.el
-    (leaf-keywords-init))
+    (leaf-keywords-init)))
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key (kbd "C-?") 'help-for-help)
 (define-key global-map [?¥] [?\\])
 (setq inhibit-startup-screen t)
 (leaf switch-window
   :ensure  t
+  :defvar switch-window-shortcut-style
   :config
   (setq switch-window-shortcut-style 'qwerty)
   )
@@ -94,6 +100,7 @@
   :url "http://www.flycheck.org"
   :emacs>= 24.3
   :ensure t
+  :defvar (flycheck-highlighting-mode  flycheck-check-syntax-automatically)
   :bind (("M-n" . flycheck-next-error)
          ("M-p" . flycheck-previous-error))
   :global-minor-mode global-flycheck-mode)
@@ -270,12 +277,16 @@
 ;; Org-captureを呼び出すキーシーケンス
 (define-key global-map "\C-cc" 'org-capture)
 ;; Org-captureのテンプレート（メニュー）の設定
-(setq org-capture-templates
+(leaf org-capture
+  :commands org-capture
+  :defvar org-capture-templates
+  :config
+  (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/org/gtd.org" "INBOX")
 	 "* TODO %?\n %i\n %a")
 	("n" "Note" entry (file+headline "~/org/notes.org" "Notes")
 	 "* %?\nEntered on %U\n %i\n %a")
-	))
+	)))
 ;; メモをC-M-^一発で見るための設定
 ;; https://qiita.com/takaxp/items/0b717ad1d0488b74429d から拝借
 (defun show-org-buffer (file)
@@ -289,9 +300,9 @@
 (global-set-key (kbd "C-M-^") (lambda () (interactive)
                                  (show-org-buffer "notes.org")))
 
-(setq org-log-done 'time)
-(setq org-todo-keywords
-  '((sequence "TODO(t)" "SOMEDAY(s)" "WAITING(w)" "|" "DONE(d)" "CANCELED(c@)")))
+
+
+
 
 
 
