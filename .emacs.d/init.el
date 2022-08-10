@@ -11,7 +11,7 @@
 (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
 (setenv "LANG" "en_US.UTF-8")
 ;; 引数ディレクトリとそのサブディレクトリをload-pathに追加
-(add-to-load-path "elisp" "conf" "public_repos")
+(add-to-load-path "elisp" "conf" "public_repos" "themes")
 
 ;;  カスタムファイルを別ファイルにする
 (custom-set-variables '( custom-file(locate-user-emacs-file "custom.el")))
@@ -48,8 +48,10 @@
 (setq inhibit-startup-screen t)
 (leaf switch-window
   :ensure  t
+  :config
+  (setq switch-window-shortcut-style 'qwerty)
   )
-(setq switch-window-shortcut-style 'qwerty)
+
 (global-set-key (kbd "C-x o") 'switch-window)
 (global-set-key (kbd "C-x 1") 'switch-window-then-maximize)
 (global-set-key (kbd "C-x 2") 'switch-window-then-split-below)
@@ -68,7 +70,7 @@
 
 
 
-(helm-projectile-on)
+
 
 (when (equal window-system 'mac)
   (setq mac-function-modifier 'meta)
@@ -84,7 +86,7 @@
   (global-set-key (kbd "s--") 'text-scale-adjust))
 
 
-(load-theme 'zenburn t)
+
 (leaf flycheck
   :doc "On-the-fly syntax checking"
   :req "dash-2.12.1" "pkg-info-0.4" "let-alist-1.0.4" "seq-1.11" "emacs-24.3"
@@ -96,7 +98,9 @@
          ("M-p" . flycheck-previous-error))
   :global-minor-mode global-flycheck-mode)
  (setq flycheck-highlighting-mode 'lines  ;; columns symbolsm sexps lines
-	flycheck-check-syntax-automatically '(save))
+       flycheck-check-syntax-automatically '(save))
+(leaf exec-path-from-shell
+  :ensure t)
 (exec-path-from-shell-initialize)
 (set-language-environment  'utf-8)
 (prefer-coding-system 'utf-8)
@@ -104,8 +108,9 @@
 ;; 更新されたファイルを自動的に読み込み直す
 (global-auto-revert-mode t)
 (global-hl-line-mode t)
-(custom-set-faces
- '(hl-line ((t (:background "SteelBlue4")))))
+(leaf zenburn-theme
+  :ensure t)
+(load-theme 'zenburn)
 
 
 ;; paren-mode :対応する括弧を強調して表示する
@@ -123,7 +128,9 @@
   )
 (leaf rust-mode
   :ensure t
-  :custom rust-format-on-save t)
+  :leaf-defer t
+  :config
+  (setq-default rust-format-on-save t))
 (leaf cargo
   :ensure t
   :hook (rust-mode . cargo-minor-mode))
@@ -168,7 +175,7 @@
   :config
   (projectile-mode +1)
   )
-(load-theme 'zenburn t)
+
 
 
 
@@ -256,10 +263,6 @@
 
 
 
-
-
-(leaf org-capture
-  :ensure t)
 
 
 ;; Org-captureの設定
