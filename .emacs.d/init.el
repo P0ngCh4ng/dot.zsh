@@ -11,6 +11,7 @@
 (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
 (setenv "LANG" "en_US.UTF-8")
 ;; 引数ディレクトリとそのサブディレクトリをload-pathに追加
+
 (add-to-load-path "elisp" "conf" "public_repos" "themes")
 
 ;;  カスタムファイルを別ファイルにする
@@ -77,7 +78,7 @@
 
 
 
-
+;;macの設定
 (when (equal window-system 'mac)
   (setq mac-function-modifier 'meta)
   (setq mac-option-modifier 'meta)
@@ -130,6 +131,112 @@
 :background 'unspecified)
 (set-face-underline 'show-paren-match "red")
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+
+(electric-pair-mode t)
+
+(custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+(setq make-backup-files nil)
+
+
+;;総合的なプログラミングの便利ツールの設定
+(leaf lsp-mode
+  :ensure t
+  :hook( (rust-mode . lsp)
+	 (typescript-mode-hook . lsp))
+  :bind ("C-c h". lsp-describe-thing-at-point)
+  :custom( (lsp-rust-server 'rust-analyzer))
+  `((lsp-keymap-prefix                  . "C-c l")
+    (lsp-inhibit-message                . t)
+    (lsp-message-project-root-warning   . t)
+    (create-lockfiles                   . nil)
+    (lsp-signature-auto-activate        . t)
+    (lsp-signature-doc-lines            . 1)
+    (lsp-print-performance              . t)
+    (lsp-log-io                         . t)
+    (lsp-eldoc-render-all               . t)
+    (lsp-enable-completion-at-point     . t)
+    (lsp-enable-xref                    . t)
+    (lsp-keep-workspace-alive           . nil)
+    (lsp-enable-snippet                 . t)
+    (lsp-server-trace                   . nil)
+    (lsp-auto-guess-root                . nil)
+    (lsp-document-sync-method           . 'lsp--sync-incremental)
+    (lsp-document-sync-method           . 2)
+    (lsp-diagnostics-provider           . :flycheck)
+    (lsp-response-timeout               . 5)
+    (lsp-idle-delay                     . 0.500)
+    (lsp-enable-file-watchers           . nil)
+    (lsp-completion-provider            . :capf)
+    (lsp-headerline-breadcrumb-segments . '(symbols)))
+  :commands
+  (lsp lsp-deferred)
+  :hook
+  (prog-major-mode . lsp-prog-major-mode-enable)
+  (lsp-mode-hook . lsp-ui-mode)
+  (lsp-mode-hook . lsp-headerline-breadcrumb-mode)
+  :init
+  (leaf lsp-ui
+    :emacs>= 26.1
+    :ensure t
+    :custom
+    ((lsp-ui-doc-enable            . t)
+     (lsp-ui-doc-deley             . 0.5)
+     (lsp-ui-doc-header            . t)
+     (lsp-ui-doc-include-signature . t)
+     (lsp-ui-doc-position          . 'at-point)
+     (lsp-ui-doc-max-width         . 150)
+     (lsp-ui-doc-max-height        . 30)
+     (lsp-ui-doc-use-childframe    . t)
+     (lsp-ui-doc-use-webkit        . t)
+     (lsp-ui-flycheck-enable       . t)
+     ;; lsp-ui-sideline
+     (lsp-ui-sideline-enable       .  t)
+     (lsp-ui-sideline-ignore-duplicate . t)
+     (lsp-ui-sideline-show-symbol  .  t)
+     (lsp-ui-sideline-show-hover   .  t)
+     (lsp-ui-sideline-show-diagnostics . t)
+     (lsp-ui-sideline-show-code-actions . t)
+     
+     ;; lsp-ui-imenu
+     (lsp-ui-imenu-enable . nil)
+     (lsp-ui-imenu-kind-position  . 'top)
+     (lsp-ui-peek-enable           . t)
+     (lsp-ui-peek-peek-height      . 20)
+     (lsp-ui-peek-list-width       . 50)
+     (lsp-ui-peek-fontify          . 'on-demand) ;; never, on-demand, or always
+     )
+    :hook ((lsp-mode-hook . lsp-ui-mode))
+    ))
+(leaf company
+  :ensure t)
+(global-company-mode) ; 全バッファで有効にする 
+
+
+
+(leaf helm
+  :ensure t
+  ::config
+  )
+
+(leaf projectile
+  :bind
+  ("s-p" . projectile-command-map)
+  :init
+  :config
+  (progn
+    (projectile-mode 1)
+    ))
+
+(leaf helm-projectile
+  :ensure t)
+(helm-projectile-on)
+
+
+;;言語ごとの設定
+
+
+
 (leaf php-mode
   :ensure t
   )
@@ -141,19 +248,6 @@
 (leaf cargo
   :ensure t
   :hook (rust-mode . cargo-minor-mode))
-
-(leaf lsp-mode
-  :ensure t
-  :hook (rust-mode . lsp)
-  (Typescript-mode-hook . lsp)
-  :bind ("C-c h". lep-describe-thing-at-point)
-  :custom (lsp-rust-server 'rust-analyzer))
-(leaf lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
-(leaf company
-  :ensure t)
-(global-company-mode) ; 全バッファで有効にする 
 
 
 (leaf typescript-mode
@@ -168,22 +262,6 @@
 (add-hook 'js-mode-hook
   (lambda ()
     (add-hook 'after-save-hook 'prettier t t)))
-
-
-(electric-pair-mode t)
-
-(custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
-
-(setq make-backup-files nil)
-
-(leaf projectile
-  :ensure t t
-  :init
-  :config
-  (projectile-mode +1)
-  )
-
-
 
 
 (leaf python-mode
@@ -260,11 +338,6 @@
   (leaf haskell-cabal
     :defvar haskell-cabal-mode-map)
 
-
-(leaf helm
-  :ensure t
-  ::config
-  )
 (put 'dired-find-alternate-file 'disabled nil)
 
 
