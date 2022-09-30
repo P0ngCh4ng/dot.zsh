@@ -41,3 +41,5 @@ fi
 zplug load --verbose
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+
+[ -f "/Users/pongchang/.ghcup/env" ] && source "/Users/pongchang/.ghcup/env" # ghcup-envexport PATH="/opt/homebrew/opt/llvm/bin:$PATH"
