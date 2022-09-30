@@ -52,6 +52,7 @@
 (global-set-key (kbd "C-?") 'help-for-help)
 (define-key global-map [?¥] [?\\])
 (setq inhibit-startup-screen t)
+
 (leaf switch-window
   :ensure  t
   :defvar switch-window-shortcut-style
@@ -137,7 +138,20 @@
 (custom-set-variables '( flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (setq make-backup-files nil)
+(setq default-directory "~/")
+(setq command-line-default-directory "~/")
 
+(leaf midnight
+  :custom
+  ((clean-buffer-list-delay-general . 1))
+  :hook
+  (emacs-startup-hook . midnight-mode))
+(midnight-delay-set 'midnight-delay "4:30am")
+(leaf uniquify
+  :custom
+  ((uniquify-buffer-name-style . 'post-forward-angle-brackets)
+   (uniquify-min-dir-content   . 1))
+  )
 
 ;;総合的なプログラミングの便利ツールの設定
 (leaf lsp-mode
@@ -232,7 +246,12 @@
   :ensure t)
 (helm-projectile-on)
 
-
+(leaf magit
+  :ensure t)
+(leaf magit-delta
+      :ensure t
+      :after magit
+      :hook (magit-mode-hook))
 ;;言語ごとの設定
 
 
@@ -299,15 +318,9 @@
 (leaf lsp-haskell
     :ensure t
     :hook (haskell-mode-hook . lsp)
-    :custom
-    ;; フォーマッターをfourmoluにします。fourmoluのデフォルト値も気に入らないがカスタマイズ出来るだけマシ。
-    (lsp-haskell-formatting-provider . "fourmolu")
-    ;; 補完時にスニペット展開(型が出てくるやつ)を行わないようにします。
-    (lsp-haskell-completion-snippets-on . nil)
-    ;; 関数補完からの自動importはcompanyから誤爆する可能性が高すぎるので無効化します。
-    (lsp-haskell-plugin-ghcide-completions-config-auto-extend-on . nil)
-    ;; importされたものが出てくる機能自体の思想は分かり易くて良いのですが、スクロール周りがすごい面倒になるので無効化。
-    (lsp-haskell-plugin-import-lens-code-lens-on . nil)
+    :config
+    (setq lsp-haskell-formatting-provider "fourmolu")
+    (setq lsp-haskell-server-path "haskell-language-server-wrapper")
     :defun
     lsp-code-actions-at-point
     lsp:code-action-title
@@ -355,10 +368,12 @@
   :defvar org-capture-templates
   :config
   (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/org/gtd.org" "INBOX")
+      '(("t" "Todo" entry (file+headline "~/org/todo.org" "INBOX")
 	 "* TODO %?\n %i\n %a")
 	("n" "Note" entry (file+headline "~/org/notes.org" "Notes")
 	 "* %?\nEntered on %U\n %i\n %a")
+	("g" "Gabage" entry (file+headline "~/org/gabage.org" "gabage")
+	 "*  Gabage %?\n %U\n %i\n %a")
 	)))
 ;; メモをC-M-^一発で見るための設定
 ;; https://qiita.com/takaxp/items/0b717ad1d0488b74429d から拝借
@@ -374,7 +389,12 @@
                                  (show-org-buffer "notes.org")))
 
 
-
+;;ブログ書く関数
+(defun make-new-blog-file (name)
+  (interactive "s")
+  (find-file (concat "~/p0ngch4ng.github.io/posts/" name ".md"))
+  )
+(global-set-key (kbd "C-c f b") 'make-new-blog-file)
 
 
 
