@@ -48,6 +48,8 @@
     :config
     ;; initialize leaf-keywords.el
     (leaf-keywords-init)))
+
+
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key (kbd "C-?") 'help-for-help)
 (define-key global-map [?¥] [?\\])
@@ -318,6 +320,7 @@
 (leaf lsp-haskell
     :ensure t
     :hook (haskell-mode-hook . lsp)
+    :defvar (lsp-haskell-formatting-provider lsp-haskell-server-path)
     :config
     (setq lsp-haskell-formatting-provider "fourmolu")
     (setq lsp-haskell-server-path "haskell-language-server-wrapper")
@@ -368,11 +371,11 @@
   :defvar org-capture-templates
   :config
   (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/org/todo.org" "INBOX")
+      '(("t" "Todo" entry (file+headline "/Users/pongchang/Library/CloudStorage/GoogleDrive-pontyan12@gmail.com/マイドライブ/org/todo.org" "INBOX")
 	 "* TODO %?\n %i\n %a")
-	("n" "Note" entry (file+headline "~/org/notes.org" "Notes")
+	("n" "Note" entry (file+headline "/Users/pongchang/Library/CloudStorage/GoogleDrive-pontyan12@gmail.com/マイドライブ/org/notes.org" "Notes")
 	 "* %?\nEntered on %U\n %i\n %a")
-	("g" "Gabage" entry (file+headline "~/org/gabage.org" "gabage")
+	("g" "Gabage" entry (file+headline "/Users/pongchang/Library/CloudStorage/GoogleDrive-pontyan12@gmail.com/マイドライブ/org/gabage.org" "gabage")
 	 "*  Gabage %?\n %U\n %i\n %a")
 	)))
 ;; メモをC-M-^一発で見るための設定
@@ -384,7 +387,7 @@
       (let ((buffer (get-buffer file)))
         (switch-to-buffer buffer)
         (message "%s" file))
-    (find-file (concat "~//org/" file))))
+    (find-file (concat "/Users/pongchang/Library/CloudStorage/GoogleDrive-pontyan12@gmail.com/マイドライブ/org/" file))))
 (global-set-key (kbd "C-M-^") (lambda () (interactive)
                                  (show-org-buffer "notes.org")))
 
