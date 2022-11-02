@@ -19,3 +19,4 @@
 /.emacs.d/transient/history.el
 /.emacs.d/custom.el
 /.emacs.d/projects
+/.zshrc.local

@@ -1,15 +1,10 @@
-zstyle ":completion:*:commands" rehash 1
-autoload -U zmv
-#PHPのパス
-export PATH="/opt/homebrew/opt/php@7.4/bin:$PATH"
-export PATH="/opt/homebrew/opt/php@7.4/sbin:$PATH"
-#mysqlのパス
-export PATH="/opt/homebrew/opt/mysql@5.7/bin:$PATH"
-export PATH=/opt/homebrew/opt/python@3.9/libexec/bin:$PATH
-export PATH="$VOLTA_HOME/bin:$PATH"
-#Brewのパスを通す
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
+nzstyle ":completion:*:commands" rehash 1
+autoload -U zmv
+ if [ -e ~/.zshrc.local ]; then
+    source ~/.zshrc.local
+  fi
+# brewがない場合
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
@@ -20,7 +15,6 @@ export VOLT_HOME="$HOME/.volta"
 PROMPT='%F{034}%n%f %F{036}($(arch))%f:%F{020}%~%f $(git_super_status)'
 PROMPT+=""$'\n'"%# "
 
-export ZPLUG_HOME=/opt/homebrew/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 
@@ -42,4 +36,4 @@ zplug load --verbose
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
-[ -f "/Users/pongchang/.ghcup/env" ] && source "/Users/pongchang/.ghcup/env" # ghcup-envexport PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-envexport PATH="/opt/homebrew/opt/llvm/bin:$PATH"
