@@ -359,23 +359,24 @@
 
 
 
-
-
 ;; Org-captureの設定
 
 ;; Org-captureを呼び出すキーシーケンス
 (define-key global-map "\C-cc" 'org-capture)
 ;; Org-captureのテンプレート（メニュー）の設定
+(setq gabagefile (concat (getenv "HOME") "/org/gabage.org"))
+(setq todofile (concat (getenv "HOME") "/org/todo.org"))
+(setq notefile (concat (getenv "HOME") "/org/notes.org"))
 (leaf org-capture
   :commands org-capture
   :defvar org-capture-templates
   :config
   (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "/Users/pongchang/Library/CloudStorage/GoogleDrive-pontyan12@gmail.com/マイドライブ/org/todo.org" "INBOX")
+      '(("t" "Todo" entry (file+headline todofile "INBOX")
 	 "* TODO %?\n %i\n %a")
-	("n" "Note" entry (file+headline "/Users/pongchang/Library/CloudStorage/GoogleDrive-pontyan12@gmail.com/マイドライブ/org/notes.org" "Notes")
+	("n" "Note" entry (file+headline notefile "Notes")
 	 "* %?\nEntered on %U\n %i\n %a")
-	("g" "Gabage" entry (file+headline "/Users/pongchang/Library/CloudStorage/GoogleDrive-pontyan12@gmail.com/マイドライブ/org/gabage.org" "gabage")
+	("g" "Gabage" entry (file+headline gabagefile "gabage")
 	 "*  Gabage %?\n %U\n %i\n %a")
 	)))
 ;; メモをC-M-^一発で見るための設定
@@ -387,7 +388,7 @@
       (let ((buffer (get-buffer file)))
         (switch-to-buffer buffer)
         (message "%s" file))
-    (find-file (concat "/Users/pongchang/Library/CloudStorage/GoogleDrive-pontyan12@gmail.com/マイドライブ/org/" file))))
+    (find-file (concat (getenv "HOME") "/org/" file))))
 (global-set-key (kbd "C-M-^") (lambda () (interactive)
                                  (show-org-buffer "notes.org")))
 

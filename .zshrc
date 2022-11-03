@@ -1,9 +1,6 @@
-
-nzstyle ":completion:*:commands" rehash 1
+zstyle ":completion:*:commands" rehash 1
 autoload -U zmv
- if [ -e ~/.zshrc.local ]; then
-    source ~/.zshrc.local
-  fi
+
 # brewがない場合
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
@@ -11,12 +8,15 @@ if type brew &>/dev/null; then
     autoload -Uz compinit
     compinit
 fi
+if [ -e ~/.zshrc.local ]; then
+    source ./.zshrc.local
+fi
+ 
 export VOLT_HOME="$HOME/.volta"
 PROMPT='%F{034}%n%f %F{036}($(arch))%f:%F{020}%~%f $(git_super_status)'
 PROMPT+=""$'\n'"%# "
 
 source $ZPLUG_HOME/init.zsh
-
 
 zplug 'zsh-users/zsh-autosuggestions'
 zplug 'zsh-users/zsh-completions'
