@@ -9,7 +9,7 @@
 	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
 	    (normal-top-level-add-subdirs-to-load-path))))))
 (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
-(setenv "LANG" "en_US.UTF-8")
+
 ;; 引数ディレクトリとそのサブディレクトリをload-pathに追加
 
 (add-to-load-path "elisp" "conf" "public_repos" "themes")
@@ -113,8 +113,18 @@
 (leaf exec-path-from-shell
   :ensure t)
 (exec-path-from-shell-initialize)
-(set-language-environment  'utf-8)
-(prefer-coding-system 'utf-8)
+
+(set-language-environment "Japanese")
+  ;; ターミナルから呼び出したときにターミナルに
+  ;; 渡す文字コード
+(set-terminal-coding-system 'utf-8-unix)
+  ;; 新しく開いたファイルを保存しておくときの
+  ;; 文字コード
+(prefer-coding-system 'utf-8-unix)
+  ;; emacsをXのアプリケーションへ貼り付ける
+  ;; ときの文字コード
+(set-clipboard-coding-system 'utf-8)
+
 (custom-set-variables '(default-tab-width 4))
 ;; 更新されたファイルを自動的に読み込み直す
 (global-auto-revert-mode t)
@@ -232,7 +242,6 @@
 
 (leaf helm
   :ensure t
-  ::config
   )
 
 (leaf projectile
