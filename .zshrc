@@ -9,7 +9,7 @@ if type brew &>/dev/null; then
     compinit
 fi
 if [ -e ~/.zshrc.local ]; then
-    source ./.zshrc.local
+    source ~/.zshrc.local
 fi
  
 export VOLT_HOME="$HOME/.volta"

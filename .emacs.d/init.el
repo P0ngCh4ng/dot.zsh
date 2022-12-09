@@ -31,12 +31,15 @@
   (customize-set-variable
    'package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
                        ("melpa" . "https://melpa.org/packages/")
-                       ("org"   . "https://orgmode.org/elpa/")))
+                       ("org"   . "https://orgmode.org/elpa/")
+                       ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                       )
+   )
   (package-initialize)
   (unless (package-installed-p 'leaf)
     (package-refresh-contents)
     (package-install 'leaf))
-
+  
   (leaf leaf-keywords
     :ensure t
     :init
@@ -52,6 +55,7 @@
 
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key (kbd "C-?") 'help-for-help)
+
 (define-key global-map [?¥] [?\\])
 (setq inhibit-startup-screen t)
 
@@ -108,14 +112,14 @@
   :bind (("M-n" . flycheck-next-error)
          ("M-p" . flycheck-previous-error))
   :global-minor-mode global-flycheck-mode)
- (setq flycheck-highlighting-mode 'lines  ;; columns symbolsm sexps lines
-       flycheck-check-syntax-automatically '(save))
+(setq flycheck-highlighting-mode 'lines  ;; columns symbolsm sexps lines
+      flycheck-check-syntax-automatically '(save))
 (leaf exec-path-from-shell
   :ensure t)
 (exec-path-from-shell-initialize)
 (set-language-environment  'utf-8)
 (prefer-coding-system 'utf-8)
-(custom-set-variables '(default-tab-width 4))
+(custom-set-variables '(default-tab-width 2))
 ;; 更新されたファイルを自動的に読み込み直す
 (global-auto-revert-mode t)
 (global-hl-line-mode t)
@@ -123,17 +127,23 @@
   :ensure t)
 (load-theme 'zenburn)
 
-
+(leaf aggressive-indent
+  :ensure t
+  )
+(global-aggressive-indent-mode 1)
+(leaf quickrun
+  :ensure t)
 ;; paren-mode :対応する括弧を強調して表示する
 (custom-set-variables '(show-paren-delay 0))		;表示までの秒数。　初期値は0.125
-(show-paren-mode t )			;有効化
+(show-paren-mode   t )			;有効化
 ;; parenのスタイル : expressionは括弧内も強調表示
 (custom-set-variables '(show-paren-style 'expression))
 ;; フェイスを変更する
 (set-face-attribute 'show-paren-match nil
 :background 'unspecified)
 (set-face-underline 'show-paren-match "red")
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+(add-to-list 'auto-mode-alist '(("\\.tsx\\'" . typescript-mode) ("\\.vue\\'" . web-mode)))
+
 
 (electric-pair-mode t)
 
@@ -143,6 +153,7 @@
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
+(setq-default indent-tabs-mode nil)
 (leaf midnight
   :custom
   ((clean-buffer-list-delay-general . 1))
@@ -160,7 +171,6 @@
   :ensure t
   :hook( (rust-mode . lsp)
 	 (typescript-mode-hook . lsp))
-  :bind ("C-c h". lsp-describe-thing-at-point)
   :custom( (lsp-rust-server 'rust-analyzer))
   `((lsp-keymap-prefix                  . "C-c l")
     (lsp-inhibit-message                . t)
@@ -232,9 +242,13 @@
 
 (leaf helm
   :ensure t
-  ::config
   )
 
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(helm-mode 1)
 (leaf projectile
   :bind
   ("s-p" . projectile-command-map)
@@ -251,12 +265,35 @@
 (leaf magit
   :ensure t)
 (leaf magit-delta
-      :ensure t
-      :after magit
-      :hook (magit-mode-hook))
+  :ensure t
+  :after magit
+  :hook (magit-mode-hook))
+
+(leaf aggressive-indent
+  :ensure t)
 ;;言語ごとの設定
 
 
+
+(leaf web-mode
+  :ensure t
+  :after flycheck
+  :defun flycheck-add-mode
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.scss\\'" . web-mode)
+         ("\\.css\\'" . web-mode)
+         ("\\.twig\\'" . web-mode)
+         ("\\.vue\\'" . web-mode)
+         ("\\.js\\'" . web-mode))
+  :config
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-comment-style 2
+        web-mode-style-padding 1
+        web-mode-script-padding 1)
+  )
 
 (leaf php-mode
   :ensure t
@@ -314,7 +351,7 @@
          ("C-c C-z" . haskell-interactive-switch)
          ([remap indent-whole-buffer] . haskell-mode-stylish-buffer))
   :config
-  (add-to-list 'safe-local-variable-values '(haskell-indent-spaces . 4))
+  (add-to-list 'safe-local-variable-values '(haskell-indent-spaces . 2))
   (add-to-list 'safe-local-variable-values '(haskell-process-use-ghci . t)))
 
 (leaf lsp-haskell
@@ -399,11 +436,3 @@
   (find-file (concat "~/p0ngch4ng.github.io/posts/" name ".md"))
   )
 (global-set-key (kbd "C-c f b") 'make-new-blog-file)
-
-
-
-
-
-
-
-

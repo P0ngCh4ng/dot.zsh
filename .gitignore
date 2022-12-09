@@ -1,3 +1,5 @@
+/.emacs.d/lsp-cache/
+/.emacs.d/racket-mode/
 /.emacs.d/vendor/
 /.emacs.d/elpa/
 /.emacs.d/auto-save-list/
