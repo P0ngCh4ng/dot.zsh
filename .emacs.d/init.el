@@ -82,7 +82,8 @@
 
 (global-set-key (kbd "C-x 4 0") 'switch-window-then-kill-buffer)
 
-
+(leaf neotree
+  :ensure t)
 
 
 ;;macの設定
@@ -152,8 +153,6 @@
 (set-face-attribute 'show-paren-match nil
 :background 'unspecified)
 (set-face-underline 'show-paren-match "red")
-(add-to-list 'auto-mode-alist '(("\\.tsx\\'" . typescript-mode) ("\\.vue\\'" . web-mode)))
-
 
 (electric-pair-mode t)
 
@@ -180,7 +179,8 @@
 (leaf lsp-mode
   :ensure t
   :hook( (rust-mode . lsp)
-	 (typescript-mode-hook . lsp))
+
+         (web-mode-hook . lsp))
   :custom( (lsp-rust-server 'rust-analyzer))
   `((lsp-keymap-prefix                  . "C-c l")
     (lsp-inhibit-message                . t)
@@ -283,6 +283,27 @@
   :ensure t)
 ;;言語ごとの設定
 
+(setq process-coding-system-alist
+      (cons '("gosh" utf-8 . utf-8) process-coding-system-alist))
+
+(setq scheme-program-name "gosh -i")
+(autoload 'scheme-mode "cmuscheme" "Major mode for Scheme." t)
+(autoload 'run-scheme "cmuscheme" "Run an inferior Scheme process." t)
+
+;; 別のウィンドウに gosh を動作させる
+(defun scheme-other-window ()
+  "Run Gauche on other window"
+  (interactive)
+  (split-window-horizontally (/ (frame-width) 2))
+  (let ((buf-name (buffer-name (current-buffer))))
+    (scheme-mode)
+    (switch-to-buffer-other-window
+     (get-buffer-create "*scheme*"))
+    (run-scheme scheme-program-name)
+    (switch-to-buffer-other-window
+     (get-buffer-create buf-name))))
+
+(define-key global-map "\C-cS" 'scheme-other-window)
 
 
 (leaf web-mode
@@ -294,20 +315,34 @@
          ("\\.css\\'" . web-mode)
          ("\\.twig\\'" . web-mode)
          ("\\.vue\\'" . web-mode)
-         ("\\.js\\'" . web-mode))
+         ("\\.js\\'" . web-mode)
+         ("\\.ts\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode)
+         )
+  
   :config
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (setq web-mode-markup-indent-offset 2
-        web-mode-css-indent-offset 2
-        web-mode-code-indent-offset 2
-        web-mode-comment-style 2
-        web-mode-style-padding 1
-        web-mode-script-padding 1)
+  (flycheck-add-mode 'javascript-eslint 'web-mode)  
+  :custom
+  (web-mode-engines-alist . '(("php"    . "\\.phtml\\'")))
+  (web-mode-markup-indent-offset . 2)
+  (web-mode-css-indent-offset . 2)
+  (web-mode-code-indent-offset . 2)
+  (web-mode-comment-style . 2)
+  (web-mode-style-padding . 1)
+  (web-mode-script-padding . 1)
   )
 
 (leaf php-mode
-  :ensure t
-  )
+    :ensure t
+    )
+(eval-when-compile
+  (el-get-bundle 'web-php-blade-mode
+    :url "https://github.com/takeokunn/web-php-blade-mode.git"))
+
+
+
+(add-to-list 'load-path (locate-user-emacs-file "el-get/web-php-blade-mode"))
+
 (leaf rust-mode
   :ensure t
   :leaf-defer t
@@ -317,19 +352,14 @@
   :ensure t
   :hook (rust-mode . cargo-minor-mode))
 
-
-(leaf typescript-mode
-  :ensure t
-  :custom
-  (typescript-indent-level . 2)
-)
 (leaf prettier-js
   :ensure t)
 (add-hook 'js-mode-hook 'prettier-js-mode)
-(add-hook 'typescript-mode-hook 'prettier-js-mode)
+
+(add-hook 'web-mode-hook 'prettier-js-mode)
 (add-hook 'js-mode-hook
-  (lambda ()
-    (add-hook 'after-save-hook 'prettier t t)))
+          (lambda ()
+            (add-hook 'after-save-hook 'prettier t t)))
 
 
 (leaf python-mode
@@ -446,3 +476,5 @@
   (find-file (concat "~/p0ngch4ng.github.io/posts/" name ".md"))
   )
 (global-set-key (kbd "C-c f b") 'make-new-blog-file)
+
+
