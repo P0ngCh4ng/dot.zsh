@@ -16,6 +16,15 @@
 
 ;;  カスタムファイルを別ファイルにする
 (custom-set-variables '( custom-file(locate-user-emacs-file "custom.el")))
+(set-locale-environment nil)
+(set-language-environment "Japanese")
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-buffer-file-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(prefer-coding-system 'utf-8)
+(setenv "LANG" "en_US.UTF-8")
 ;; カスタムファイルが存在しない場合は作成する
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file))
