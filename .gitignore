@@ -22,3 +22,4 @@
 /.emacs.d/custom.el
 /.emacs.d/projects
 /.zshrc.local
+/.emacs.d/el-get/
