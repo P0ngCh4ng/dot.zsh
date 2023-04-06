@@ -108,7 +108,10 @@
   (global-set-key (kbd "s-z") 'undo)
   (global-set-key (kbd "s-+") 'text-scale-adjust)
   (global-set-key (kbd "s--") 'text-scale-adjust))
-
+(leaf cus-edit
+  :doc "tools for customizing Emacs and Lisp packages"
+  :tag "builtin" "faces" "help"
+  :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 
 
 (leaf flycheck
@@ -478,12 +481,42 @@
 (global-set-key (kbd "C-M-^") (lambda () (interactive)
                                  (show-org-buffer "notes.org")))
 
-
+(setq org-agenda-files '("~/org/todo.org"))
 ;;ブログ書く関数
 (defun make-new-blog-file (name)
   (interactive "s")
   (find-file (concat "~/p0ngch4ng.github.io/posts/" name ".md"))
   )
 (global-set-key (kbd "C-c f b") 'make-new-blog-file)
+(leaf org-roam
+  :emacs>= 26.1
+  :bind
+  (   ("C-c n c" . org-roam-node-find)
+      ("C-c n i" . org-roam-node-insert))
+  :ensure t
+  :custom
+  `((org-roam-db-location . ,(expand-file-name "org-roam.db" "./emacs.d/"))
+    (org-roam-directory   . "~/org/"))
+  )
 
+
+(leaf beacon
+  :ensure t
+  :custom
+  `((beacon-color              . "#aa3400")
+    ;; (beacon-size               . 64)
+    (beacon-blink-when-focused . t)
+    )
+  :custom-face
+  `((beacon-fallback-background . '((t (:background "#556b2f")))))
+  :config
+  (beacon-mode 1)
+  )
+
+(defun my-initial-buffer ()
+  (interactive)
+  (org-agenda nil "a" nil)            
+  (org-agenda-manipulate-query-add)   ; inactiveなエントリーも表示
+  (get-buffer "*Org Agenda*")         ; バッファを返す必要がある
+  )
 
