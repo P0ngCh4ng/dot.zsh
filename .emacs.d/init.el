@@ -509,8 +509,6 @@
     )
   :custom-face
   `((beacon-fallback-background . '((t (:background "#556b2f")))))
-  :config
-  (beacon-mode 1)
   )
 
 (defun my-initial-buffer ()
