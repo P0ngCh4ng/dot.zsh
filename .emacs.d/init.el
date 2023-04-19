@@ -454,20 +454,23 @@
 (define-key global-map "\C-cc" 'org-capture)
 ;; Org-captureのテンプレート（メニュー）の設定
 (setq gabagefile (concat (getenv "HOME") "/org/gabage.org"))
-(setq todofile (concat (getenv "HOME") "/org/todo.org"))
+(setq worktodofile (concat (getenv "HOME") "/org/worktodo.org"))
 (setq notefile (concat (getenv "HOME") "/org/notes.org"))
+(setq lifetodofile (concat (getenv "HOME") "/org/lifetodo.org"))
 (leaf org-capture
   :commands org-capture
   :defvar org-capture-templates
   :config
   (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline todofile "INBOX")
-	 "* TODO %?\n %i\n %a")
-	("n" "Note" entry (file+headline notefile "Notes")
-	 "* %?\nEntered on %U\n %i\n %a")
-	("g" "Gabage" entry (file+headline gabagefile "gabage")
-	 "*  Gabage %?\n %U\n %i\n %a")
-	)))
+        '(("w" "WorkTodo" entry (file+headline worktodofile "TODO")
+	   "* TODO %?\n %i\n %a")
+          ("l" "LifeTodo" entry (file+headline lifetodofile "TODO")
+           "* TODO %?\n %i\n %a")
+	  ("n" "Note" entry (file+headline notefile "Notes")
+	   "* %?\nEntered on %U\n %i\n %a")
+	  ("g" "Gabage" entry (file+headline gabagefile "gabage")
+	   "*  Gabage %?\n %U\n %i\n %a")
+	  )))
 ;; メモをC-M-^一発で見るための設定
 ;; https://qiita.com/takaxp/items/0b717ad1d0488b74429d から拝借
 (defun show-org-buffer (file)
@@ -481,7 +484,8 @@
 (global-set-key (kbd "C-M-^") (lambda () (interactive)
                                  (show-org-buffer "notes.org")))
 
-(setq org-agenda-files '("~/org/todo.org"))
+(setq org-agenda-files '("~/org/worktodo.org" "~/org/lifetodo.org"))
+(setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
 ;;ブログ書く関数
 (defun make-new-blog-file (name)
   (interactive "s")
@@ -492,13 +496,32 @@
   :emacs>= 26.1
   :bind
   (   ("C-c n c" . org-roam-node-find)
-      ("C-c n i" . org-roam-node-insert))
+      ("C-c n i" . org-roam-node-insert)      
+      ("C-c n l" . org-roam-buffer-toggle)
+      (:org-mode-map
+       ("C-M-i"   . completion-at-point)))  
   :ensure t
   :custom
-  `((org-roam-db-location . ,(expand-file-name "org-roam.db" "./emacs.d/"))
-    (org-roam-directory   . "~/org/"))
+  `((org-roam-db-location . ,(expand-file-name "org-roam.db" "~/emacs.d/"))
+    (org-roam-directory   . "~/org/")
+    (org-roam-graph-executable .  "/opt/homebrew/bin/dot")
+    (org-roam-complete-everywhere . t))
   )
 
+(org-roam-db-autosync-mode)
+(setq org-roam-mode-sections
+      (list #'org-roam-backlinks-section
+            #'org-roam-reflinks-section
+            ;; #'org-roam-unlinked-references-section
+            ))
+
+
+(add-to-list 'display-buffer-alist
+             '("\\*org-roam\\*"
+               (display-buffer-in-direction)
+               (direction . right)
+               (window-width . 0.33)
+               (window-height . fit-window-to-buffer)))
 
 (leaf beacon
   :ensure t
@@ -520,3 +543,8 @@
   (get-buffer "*Org Agenda*")         ; バッファを返す必要がある
   )
 
+(leaf midnight
+  :custom
+  ((clean-buffer-list-delay-general . 1))
+  :hook
+  (emacs-startup-hook . midnight-mode))
