@@ -40,7 +40,6 @@
   (customize-set-variable
    'package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
                        ("melpa" . "https://melpa.org/packages/")
-                       ("org"   . "https://orgmode.org/elpa/")
                        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
                        )
    )
@@ -59,8 +58,10 @@
 
     :config
     ;; initialize leaf-keywords.el
-    (leaf-keywords-init)))
-
+    (leaf-keywords-init))
+  )
+(leaf leaf-convert
+  :ensure t)
 
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key (kbd "C-?") 'help-for-help)
@@ -448,6 +449,10 @@
 
 
 
+(leaf org
+  :doc "Export Framework for Org Mode"
+  :tag "gnu"
+  :added "2023-05-29")
 ;; Org-captureの設定
 
 ;; Org-captureを呼び出すキーシーケンス
