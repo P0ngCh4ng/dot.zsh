@@ -23,3 +23,5 @@
 /.emacs.d/projects
 /.zshrc.local
 /.emacs.d/el-get/
+/.emacs.d/kkcrc
+/.emacs.d/async-butecomp.log
