@@ -133,14 +133,14 @@
 (exec-path-from-shell-initialize)
 
 (set-language-environment "Japanese")
-  ;; ターミナルから呼び出したときにターミナルに
-  ;; 渡す文字コード
+;; ターミナルから呼び出したときにターミナルに
+;; 渡す文字コード
 (set-terminal-coding-system 'utf-8-unix)
-  ;; 新しく開いたファイルを保存しておくときの
-  ;; 文字コード
+;; 新しく開いたファイルを保存しておくときの
+;; 文字コード
 (prefer-coding-system 'utf-8-unix)
-  ;; emacsをXのアプリケーションへ貼り付ける
-  ;; ときの文字コード
+;; emacsをXのアプリケーションへ貼り付ける
+;; ときの文字コード
 (set-clipboard-coding-system 'utf-8)
 
 (custom-set-variables '(default-tab-width 4))
@@ -164,7 +164,7 @@
 (custom-set-variables '(show-paren-style 'expression))
 ;; フェイスを変更する
 (set-face-attribute 'show-paren-match nil
-:background 'unspecified)
+                    :background 'unspecified)
 (set-face-underline 'show-paren-match "red")
 
 (electric-pair-mode t)
@@ -346,8 +346,8 @@
   )
 
 (leaf php-mode
-    :ensure t
-    )
+  :ensure t
+  )
 (eval-when-compile
   (el-get-bundle 'web-php-blade-mode
     :url "https://github.com/takeokunn/web-php-blade-mode.git"))
@@ -408,41 +408,41 @@
   (add-to-list 'safe-local-variable-values '(haskell-process-use-ghci . t)))
 
 (leaf lsp-haskell
-    :ensure t
-    :hook (haskell-mode-hook . lsp)
-    :defvar (lsp-haskell-formatting-provider lsp-haskell-server-path)
-    :config
-    (setq lsp-haskell-formatting-provider "fourmolu")
-    (setq lsp-haskell-server-path "haskell-language-server-wrapper")
-    :defun
-    lsp-code-actions-at-point
-    lsp:code-action-title
-    )
+  :ensure t
+  :hook (haskell-mode-hook . lsp)
+  :defvar (lsp-haskell-formatting-provider lsp-haskell-server-path)
+  :config
+  (setq lsp-haskell-formatting-provider "fourmolu")
+  (setq lsp-haskell-server-path "haskell-language-server-wrapper")
+  :defun
+  lsp-code-actions-at-point
+  lsp:code-action-title
+  )
 (leaf haskell-customize
-    :defvar haskell-stylish-on-save
-    :init
-    (eval-and-compile
-      (defun stylish-haskell-enable ()
-        "保存したときに自動的にstylish-haskellを適用する。"
-        (interactive)
-        (setq-local haskell-stylish-on-save t))
-      (defun stylish-haskell-disable ()
-        (interactive)
-        (setq-local haskell-stylish-on-save nil))
-      (defun stylish-haskell-toggle ()
-        (interactive)
-        (setq-local haskell-stylish-on-save (not haskell-stylish-on-save)))
-      (defun stylish-haskell-setup ()
-        "プロジェクトディレクトリにstylish-haskellの設定ファイルがある場合、保存したときに自動的にstylish-haskellを適用する。"
-        (if (locate-dominating-file default-directory ".stylish-haskell.yaml")
-            (stylish-haskell-enable)
-          (stylish-haskell-disable))))
-    :hook (haskell-mode-hook . stylish-haskell-setup))
-  (leaf haskell-interactive-mode
-    :after t
-    :defvar haskell-interactive-mode-map)
-  (leaf haskell-cabal
-    :defvar haskell-cabal-mode-map)
+  :defvar haskell-stylish-on-save
+  :init
+  (eval-and-compile
+    (defun stylish-haskell-enable ()
+      "保存したときに自動的にstylish-haskellを適用する。"
+      (interactive)
+      (setq-local haskell-stylish-on-save t))
+    (defun stylish-haskell-disable ()
+      (interactive)
+      (setq-local haskell-stylish-on-save nil))
+    (defun stylish-haskell-toggle ()
+      (interactive)
+      (setq-local haskell-stylish-on-save (not haskell-stylish-on-save)))
+    (defun stylish-haskell-setup ()
+      "プロジェクトディレクトリにstylish-haskellの設定ファイルがある場合、保存したときに自動的にstylish-haskellを適用する。"
+      (if (locate-dominating-file default-directory ".stylish-haskell.yaml")
+          (stylish-haskell-enable)
+        (stylish-haskell-disable))))
+  :hook (haskell-mode-hook . stylish-haskell-setup))
+(leaf haskell-interactive-mode
+  :after t
+  :defvar haskell-interactive-mode-map)
+(leaf haskell-cabal
+  :defvar haskell-cabal-mode-map)
 
 (put 'dired-find-alternate-file 'disabled nil)
 
@@ -460,8 +460,7 @@
 ;; Org-captureのテンプレート（メニュー）の設定
 (setq gabagefile (concat (getenv "HOME") "/org/gabage.org"))
 (setq worktodofile (concat (getenv "HOME") "/org/worktodo.org"))
-(setq notefile (concat (getenv "HOME") "/org/notes.org"))
-(setq lifetodofile (concat (getenv "HOME") "/org/lifetodo.org"))
+
 (leaf org-capture
   :commands org-capture
   :defvar org-capture-templates
@@ -469,10 +468,6 @@
   (setq org-capture-templates
         '(("w" "WorkTodo" entry (file+headline worktodofile "TODO")
 	   "* TODO %?\n %i\n %a")
-          ("l" "LifeTodo" entry (file+headline lifetodofile "TODO")
-           "* TODO %?\n %i\n %a")
-	  ("n" "Note" entry (file+headline notefile "Notes")
-	   "* %?\nEntered on %U\n %i\n %a")
 	  ("g" "Gabage" entry (file+headline gabagefile "gabage")
 	   "*  Gabage %?\n %U\n %i\n %a")
 	  )))
@@ -487,9 +482,9 @@
         (message "%s" file))
     (find-file (concat (getenv "HOME") "/org/" file))))
 (global-set-key (kbd "C-M-^") (lambda () (interactive)
-                                 (show-org-buffer "notes.org")))
+                                (show-org-buffer "notes.org")))
 
-(setq org-agenda-files '("~/org/worktodo.org" "~/org/lifetodo.org"))
+(setq org-agenda-files '("~/org/worktodo.org" "~/org/habits.org"))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
 ;;ブログ書く関数
 (defun make-new-blog-file (name)
@@ -507,11 +502,16 @@
        ("C-M-i"   . completion-at-point)))  
   :ensure t
   :custom
-  `((org-roam-db-location . ,(expand-file-name "org-roam.db" "~/emacs.d/"))
-    (org-roam-directory   . "~/org/")
-    (org-roam-graph-executable .  "/opt/homebrew/bin/dot")
-    (org-roam-complete-everywhere . t))
-  )
+  `((org-roam-db-location . ,(expand-file-name "org-roam.db" "~/.emacs.d/"))
+    (org-roam-directory   . "~/org/notes")
+    (org-roam-graph-executable .  "/usr/bin/dot")
+    (org-roam-complete-everywhere . t)
+    ))
+
+
+(require 'org-habit)
+(setq org-habit-show-all-today t)
+(setq org-clock-into-drawer t)
 
 (org-roam-db-autosync-mode)
 (setq org-roam-mode-sections
@@ -541,10 +541,12 @@
   (beacon-mode 1)
   )
 
+
+
 (defun my-initial-buffer ()
   (interactive)
   (org-agenda nil "a" nil)            
-  (org-agenda-manipulate-query-add)   ; inactiveなエントリーも表示
+  (org-agenda-clockreport-mode)   ; inactiveなエントリーも表示
   (get-buffer "*Org Agenda*")         ; バッファを返す必要がある
   )
 
