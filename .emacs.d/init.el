@@ -502,16 +502,18 @@
        ("C-M-i"   . completion-at-point)))  
   :ensure t
   :custom
-  `((org-roam-db-location . ,(expand-file-name "org-roam.db" "~/.emacs.d/"))
-    (org-roam-directory   . "~/org/notes")
-    (org-roam-graph-executable .  "/usr/bin/dot")
-    (org-roam-complete-everywhere . t)
-    ))
-
+    `((org-roam-db-location . ,(expand-file-name "org-roam.db" "~/emacs.d/"))
+    (org-roam-directory   . "~/org/")
+    (org-roam-graph-executable .  "/opt/homebrew/bin/dot")
+    (org-roam-complete-everywhere . t))
+  )
 
 (require 'org-habit)
 (setq org-habit-show-all-today t)
 (setq org-clock-into-drawer t)
+
+
+
 
 (org-roam-db-autosync-mode)
 (setq org-roam-mode-sections
