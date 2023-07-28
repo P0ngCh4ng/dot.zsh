@@ -269,6 +269,7 @@
 
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-set-key (kbd "M-x") 'helm-M-x)
+
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-x b") 'helm-mini)
 (helm-mode 1)
@@ -283,7 +284,7 @@
 
 (leaf helm-projectile
   :ensure t)
-(helm-projectile-on)
+
 
 (leaf magit
   :ensure t)
@@ -502,7 +503,7 @@
        ("C-M-i"   . completion-at-point)))  
   :ensure t
   :custom
-    `((org-roam-db-location . ,(expand-file-name "org-roam.db" "~/org/"))
+    `((org-roam-db-location . ,(expand-file-name "org-roam.db" "~/.emacs.d/"))
     (org-roam-directory   . "~/org/notes/")
     (org-roam-graph-executable .  "/opt/homebrew/bin/dot")
     (org-roam-complete-everywhere . t))
@@ -515,7 +516,7 @@
 
 
 
-(org-roam-db-autosync-mode)
+
 (setq org-roam-mode-sections
       (list #'org-roam-backlinks-section
             #'org-roam-reflinks-section

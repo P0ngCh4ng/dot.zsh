@@ -8,6 +8,7 @@
 /.emacs.d/tramp
 /.emacs.d/.cask
 /.emacs.d/.ehist
+/.emacs.d/org-roam.db
 /*~
 /.emacs.d/*~
 .DS_Store
@@ -25,3 +26,4 @@
 /.emacs.d/el-get/
 /.emacs.d/kkcrc
 /.emacs.d/async-butecomp.log
+.emacs.d/network-security.data
