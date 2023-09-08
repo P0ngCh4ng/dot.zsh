@@ -278,9 +278,12 @@
   ("s-p" . projectile-command-map)
   :init
   :config
+  (setq projectile-indexing-method 'hybrid)
+  (add-to-list 'projectile-globally-ignored-directories "*node_modules")
   (progn
     (projectile-mode 1)
     ))
+
 
 (leaf helm-projectile
   :ensure t)
