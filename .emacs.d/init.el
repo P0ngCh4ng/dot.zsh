@@ -280,6 +280,7 @@
   :config
   (setq projectile-indexing-method 'hybrid)
   (add-to-list 'projectile-globally-ignored-directories "*node_modules")
+  (add-to-list 'projectile-globally-ignored-directories "*dist")
   (progn
     (projectile-mode 1)
     ))
