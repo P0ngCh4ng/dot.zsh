@@ -13,7 +13,7 @@
 ;; 引数ディレクトリとそのサブディレクトリをload-pathに追加
 
 (add-to-load-path "elisp" "conf" "public_repos" "themes")
-
+(load "advance_habits")
 ;;  カスタムファイルを別ファイルにする
 (custom-set-variables '( custom-file(locate-user-emacs-file "custom.el")))
 (set-locale-environment nil)
@@ -489,7 +489,7 @@
 (global-set-key (kbd "C-M-^") (lambda () (interactive)
                                 (show-org-buffer "notes.org")))
 
-(setq org-agenda-files '("~/org/worktodo.org" "~/org/habits.org"))
+(setq org-agenda-files '("~/org/worktodo.org" "~/org/habits.org" "~/org/todo.org"))
 (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
 ;;ブログ書く関数
 (defun make-new-blog-file (name)
