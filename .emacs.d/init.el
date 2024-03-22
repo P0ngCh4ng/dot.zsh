@@ -115,6 +115,14 @@
   :tag "builtin" "faces" "help"
   :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 
+(defun my/ansi-colorize-buffer ()
+  (let ((buffer-read-only nil))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(leaf ansi-color
+  :config
+  (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
+  )
 
 (leaf flycheck
   :doc "On-the-fly syntax checking"
@@ -552,7 +560,14 @@
   )
 
 
-
+(leaf neotree
+  :ensure t
+  )
+(leaf all-the-icons
+  :ensure t)
+(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+(setq neo-smart-open t)
+(setq projectile-switch-project-action 'neotree-projectile-action)
 (defun my-initial-buffer ()
   (interactive)
   (org-agenda nil "a" nil)            
@@ -565,3 +580,26 @@
   ((clean-buffer-list-delay-general . 1))
   :hook
   (emacs-startup-hook . midnight-mode))
+
+
+
+
+
+(defun my/advance-todos-schedule-from-today (time-string)
+  "Interactively advance the schedule time of the TODOs with names and seconds in TODO-NAMES-SECONDS from today's TIME-STRING."
+  (interactive "sEnter time (HH:MM:SS): ")
+  (let* ((date-string (format-time-string "%Y-%m-%d"))
+         (time-string (concat date-string " " time-string))
+         (time (date-to-time time-string))
+         (todo-names-seconds (with-temp-buffer
+                               (insert-file-contents "~/org/list.el")
+                               (read (buffer-string)))))
+    (save-excursion
+      (dolist (todo-name-seconds todo-names-seconds)
+        (let ((todo-name (car todo-name-seconds))
+              (seconds (cadr todo-name-seconds)))
+          (goto-char (point-min))
+          (while (re-search-forward todo-name nil t)
+            (when (org-at-heading-p)
+              (org-schedule nil (format-time-string "%Y-%m-%d %H:%M:%S" 
+                                                    (time-add time seconds))))))))))
