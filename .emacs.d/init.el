@@ -60,12 +60,13 @@
     ;; initialize leaf-keywords.el
     (leaf-keywords-init))
   )
+
 (leaf leaf-convert
   :ensure t)
 
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key (kbd "C-?") 'help-for-help)
-
+(setq ring-bell-function 'ignore)
 (define-key global-map [?¥] [?\\])
 (setq inhibit-startup-screen t)
 
@@ -465,17 +466,19 @@
 ;; Org-captureのテンプレート（メニュー）の設定
 (setq gabagefile (concat (getenv "HOME") "/org/gabage.org"))
 (setq worktodofile (concat (getenv "HOME") "/org/worktodo.org"))
-
+(setq todofile (concat (getenv "HOME") "/org/todo.org"))
 (leaf org-capture
   :commands org-capture
   :defvar org-capture-templates
   :config
   (setq org-capture-templates
-        '(("w" "WorkTodo" entry (file+headline worktodofile "TODO")
+        '(("w" "WorkTodo" entry (file+headline worktodofile "workTODO")
 	   "* TODO %?\n %i\n %a")
 	  ("g" "Gabage" entry (file+headline gabagefile "gabage")
 	   "*  Gabage %?\n %U\n %i\n %a")
-	  )))
+          ("t" "Todo" entry (file+headline todofile "TODO")
+           "* TODO %?\n %U\n %i\n %a")
+          )))
 ;; メモをC-M-^一発で見るための設定
 ;; https://qiita.com/takaxp/items/0b717ad1d0488b74429d から拝借
 (defun show-org-buffer (file)
