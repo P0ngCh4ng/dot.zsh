@@ -64,6 +64,36 @@
 (leaf leaf-convert
   :ensure t)
 
+(leaf copilot
+  :el-get (copilot
+           :type github
+           :pkgname "zerolfx/copilot.el"
+           )
+  :config
+  (leaf editorconfig
+    :ensure t
+    )
+  (leaf s
+    :ensure t
+    )
+  (leaf dash
+    :ensure t
+    )
+  (defun my/copilot-tab ()
+    (interactive)
+    (or (copilot-accept-completion)
+        (indent-for-tab-command)))
+
+  (with-eval-after-load 'copilot
+    (define-key copilot-mode-map (kbd "<tab>") #'my/copilot-tab))
+  )
+(add-hook 'prog-mode-hook 'copilot-mode)
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "C-TAB") #'my-tab)
+  (define-key company-active-map (kbd "C-<tab>") #'my-tab)
+  (define-key company-mode-map (kbd "C-TAB") #'my-tab)
+  (define-key company-mode-map (kbd "C-<tab>") #'my-tab))
+
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key (kbd "C-?") 'help-for-help)
 (setq ring-bell-function 'ignore)

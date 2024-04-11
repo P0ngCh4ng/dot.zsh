@@ -1,6 +1,7 @@
 zstyle ":completion:*:commands" rehash 1
 autoload -U zmv
-
+PATH="$HOME/homebrew/bin:$PATH"
+ZPLUG_HOME="$HOME/.zplug"
 # brewがない場合
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
@@ -11,17 +12,15 @@ fi
 if [ -e ~/.zshrc.local ]; then
     source ~/.zshrc.local
 fi
- 
+source $ZPLUG_HOME/init.zsh
 export VOLT_HOME="$HOME/.volta"
 PROMPT='%F{034}%n%f %F{036}($(arch))%f:%F{020}%~%f $(git_super_status)'
 PROMPT+=""$'\n'"%# "
 
-source $ZPLUG_HOME/init.zsh
-
 zplug 'zsh-users/zsh-autosuggestions'
 zplug 'zsh-users/zsh-completions'
 zplug 'zsh-users/zsh-syntax-highlighting'
-zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
+zplug "zsh-users/zsh-history-substring-search"
 zplug "woefe/git-prompt.zsh"
 # 未インストール項目をインストールする
 if ! zplug check --verbose; then
