@@ -170,6 +170,7 @@
 (leaf exec-path-from-shell
   :ensure t)
 (exec-path-from-shell-initialize)
+(exec-path-from-shell-copy-env "DEEPL_API_KEY")
 
 (set-language-environment "Japanese")
 ;; ターミナルから呼び出したときにターミナルに
@@ -296,6 +297,23 @@
      )
     :hook ((lsp-mode-hook . lsp-ui-mode))
     ))
+(leaf go-translate
+  :ensure t
+  :bind ("C-c t" . gts-do-translate)
+  :config
+  (setq gts-translate-list '(("en" "ja") ("ja" "en")))
+  (setq gts-default-translator
+	(gts-translator
+	 :picker (gts-noprompt-picker)
+	 :engines (list
+		   (gts-deepl-engine
+                    :auth-key (getenv "DEEPL_API_KEY") :pro nil) ;; CHANGEME
+		   (gts-google-engine)
+		   (gts-bing-engine))
+ 	 :render (gts-buffer-render)))
+  )
+
+
 (leaf company
   :ensure t)
 (global-company-mode) ; 全バッファで有効にする 

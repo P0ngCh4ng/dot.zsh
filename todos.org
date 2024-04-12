@@ -1,4 +1,3 @@
-
 ** zplugを自動で取ってくるように
 
 ** lsdeluxの設定
@@ -10,3 +9,4 @@ brew install font-hack-nerd-font
 ** brewのインストール先を変更
 
 ** make initコマンドを実行できるように
+とりあえず実行可能に
