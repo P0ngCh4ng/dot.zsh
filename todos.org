@@ -10,3 +10,5 @@ brew install font-hack-nerd-font
 
 ** make initコマンドを実行できるように
 とりあえず実行可能に
+
+** zshのオプションファイルを実行できるように
