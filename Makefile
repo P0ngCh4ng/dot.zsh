@@ -20,12 +20,9 @@ list:
 deploy:
 	@$(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
 
-# todo
+# todo  
 init:
 	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/init/init.sh
-#todo
-test:
-	@DOTPATH=$(DOTPATH) bash $(DOTPATH)/etc/test/test.sh
 
 update:
 	git pull origin master

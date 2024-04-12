@@ -9,17 +9,6 @@ cd $THIS_DIR
 git submodule init
 git submodule update
 
-echo "start setup..."
-for f in .??*; do
-    [ "$f" = ".git" ] && continue
-    [ "$f" = ".gitconfig.local.template" ] && continue
-    [ "$f" = ".require_oh-my-zsh" ] && continue
-    [ "$f" = ".gitmodules" ] && continue
-
-    ln -snfv ~/dotfiles/"$f" ~/
-done
-
-[ -e ~/.gitconfig.local ] || cp ~/dotfiles/.gitconfig.local.template ~/.gitconfig.local
 
 # emacs set up
 if which cask >/dev/null 2>&1; then
