@@ -44,3 +44,6 @@ setopt rc_quotes
 setopt rm_star_wait
 setopt sh_word_split
 setopt share_history
+setopt hist_ignore_space
+setopt hist_save_no_dups
+setopt hist_reduce_blanks
