@@ -39,7 +39,7 @@ alias gst='git status'
 alias gco='git checkout'
 alias gf='git fetch'
 alias gc='git commit'
-alias gacp='git add . && git commit -m "$1" && git push'
+gacp() { git add . && git commit -m "$1" && git push; }
 
 alias ..='cd ..'
 alias ...='cd ../..'
