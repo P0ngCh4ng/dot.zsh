@@ -1,3 +1,4 @@
+echo "Brew and Zplug are required to run this script."
 zstyle ":completion:*:commands" rehash 1
 autoload -U zmv
 
@@ -10,9 +11,11 @@ if type brew &>/dev/null; then
     autoload -Uz compinit
     compinit -i
 fi
+
 if [ -e ~/.zshrc.local ]; then
     source ~/.zshrc.local
 fi
+
 source $ZPLUG_HOME/init.zsh
 source $(pwd)/dotfiles/opt.zsh  #todo
 
@@ -60,4 +63,4 @@ fi
 zplug load --verbose
 
 
-[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-envexport PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"# ghcup-env export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
