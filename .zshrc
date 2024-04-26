@@ -1,8 +1,6 @@
 zstyle ":completion:*:commands" rehash 1
 autoload -U zmv
-PATH="$HOME/homebrew/bin:$PATH"
-ZPLUG_HOME="$HOME/.zplug"
-VOLT_HOME="$HOME/.volta"
+
 
 
 # brewがない場合
@@ -28,7 +26,20 @@ alias la='lsd -a'
 alias lla='lsd -la'
 alias lt='lsd --tree'
 
+alias g='git'
+alias ga='git add'
+alias gd='git diff'
+alias gs='git status'
+alias gp='git push'
+alias gb='git branch'
+alias gst='git status'
+alias gco='git checkout'
+alias gf='git fetch'
+alias gc='git commit'
 
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 # プラグインの指定_
 
 zplug 'zsh-users/zsh-autosuggestions'
@@ -46,7 +57,6 @@ fi
 
 # コマンドをリンクして、PATH に追加し、プラグインは読み込む
 zplug load --verbose
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
+
 
 [ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env" # ghcup-envexport PATH="/opt/homebrew/opt/llvm/bin:$PATH"

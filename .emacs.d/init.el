@@ -124,7 +124,9 @@
 (global-set-key (kbd "C-x 4 0") 'switch-window-then-kill-buffer)
 
 (leaf neotree
-  :ensure t)
+  :ensure t
+  :init
+  (setq-default neo-show-hidden-files t))
 
 
 ;;macの設定
