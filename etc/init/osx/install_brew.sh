@@ -1,67 +1,18 @@
 #!/bin/bash
 
-#echo "installing homebrew..."
-#which brew >/dev/null 2>&1 || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+echo "installing homebrew..."
+which brew >/dev/null 2>&1 || /usr/bin/ruby -e "$(curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew)"
+
+echo "ok. run brew upgrade..."
+
+brew bundle --global
 
 echo "run brew doctor..."
 which brew >/dev/null 2>&1 && brew doctor
 
 echo "run brew update..."
 which brew >/dev/null 2>&1 && brew update
-
-echo "ok. run brew upgrade..."
-
-brew upgrade --all
-
-formulas=(
-    git
-    wget
-    curl
-    tree
-    openssl
-    colordiff
-    "--without-etcdir zsh"
-    zsh-completions
-    "--with-cocoa --srgb emacs"
-    cask
-    python3
-    mysql
-    postgresql
-    sqlite
-    "php55 --homebrew-apxs"
-    httpd22
-    sqlite
-    composer
-    markdown
-)
-
-"brew tap..."
-brew tap homebrew/dupes
-brew tap homebrew/versions
-brew tap homebrew/homebrew-php
-brew tap homebrew/apache
-brew tap sanemat/font
-
-echo "start brew install apps..."
-for formula in "${formulas[@]}"; do
-    brew install $formula || brew upgrade $formula
-done
-
-casks=(
-    bettertouchtool
-    google-chrome
-    slack
-    iterm2
-    virtualbox
-)
-
-echo "start brew cask install apps..."
-for cask in "${casks[@]}"; do
-    brew cask install $cask
-done
-
 brew cleanup
-brew cask cleanup
 
 cat << END
 
