@@ -16,7 +16,7 @@ SCRIPT_DIR="$(cd $(dirname $0); pwd)"
 echo "SCRIPT_DIR=$SCRIPT_DIR"
 if [ "$(uname)" == 'Darwin' ]; then
     #このファイルから二つ下の階層のファイルを実行する。この際、pwdで取得したパスを使う
-    for f in `find $SCRIPT_DIR/osx/*`;
+    for f in `find $SCRIPT_DIR/osx/*.sh`;
     do bash $f
     done
     OS='Mac'
@@ -28,6 +28,8 @@ else
     echo "Your platform ($(uname -a)) is not supported."
 fi
 
+#変数OSの値がMacであれば、再起動を実行する
+
 cat << END
 
 **************************************************
@@ -36,7 +38,7 @@ DOTFILES SETUP FINISHED! bye.
 
 END
 
-if(OS == 'Mac') then
-  echo "Now you need to restart your Mac to apply the changes. SO it's comming"
-  sudo reboot
+if [ $OS = 'Mac' ]; then
+    echo "Restarting PC..."
+    sudo reboot
 fi

@@ -5,7 +5,7 @@ which brew >/dev/null 2>&1 || /usr/bin/ruby -e "$(curl -L https://github.com/Hom
 
 echo "ok. run brew upgrade..."
 
-brew bundle --global
+brew bundle
 
 echo "run brew doctor..."
 which brew >/dev/null 2>&1 && brew doctor
