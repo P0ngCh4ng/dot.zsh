@@ -2,7 +2,13 @@ echo "Brew and Zplug are required to run this script."
 zstyle ":completion:*:commands" rehash 1
 autoload -U zmv
 
-
+# auto_ls
+function chpwd(){
+    if [[ $(pwd) != $HOME ]]; then;
+                                  ls
+    fi
+}
+autoload chpwd
 
 # brewがない場合
 if type brew &>/dev/null; then
