@@ -87,6 +87,8 @@
   (with-eval-after-load 'copilot
     (define-key copilot-mode-map (kbd "<tab>") #'my/copilot-tab))
   )
+(setq copilot-indent-offset-warning-disable t)
+
 (add-hook 'prog-mode-hook 'copilot-mode)
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "C-TAB") #'my-tab)
