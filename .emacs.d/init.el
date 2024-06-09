@@ -96,6 +96,12 @@
   (define-key company-mode-map (kbd "C-TAB") #'my-tab)
   (define-key company-mode-map (kbd "C-<tab>") #'my-tab))
 
+
+(leaf mozc
+  :ensure t)
+(set-language-environment 'Japanese)
+(setq default-input-method "mozc")
+
 (keyboard-translate ?\C-h ?\C-?)
 (global-set-key (kbd "C-?") 'help-for-help)
 (setq ring-bell-function 'ignore)
