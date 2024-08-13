@@ -23,7 +23,7 @@ if [ -e ~/.zshrc.local ]; then
 fi
 
 source $ZPLUG_HOME/init.zsh
-source $(pwd)/dotfiles/opt.zsh  #todo
+source $HOME/dotfiles/opt.zsh
 
 PROMPT='%F{034}%n%f %F{036}($(arch))%f:%F{020}%~%f $(git_super_status)'
 PROMPT+=""$'\n'"%# "
