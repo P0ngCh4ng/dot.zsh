@@ -575,6 +575,7 @@
       (:org-mode-map
        ("C-M-i"   . completion-at-point)))  
   :ensure t
+  :require t
   :custom
     `((org-roam-db-location . ,(expand-file-name "org-roam.db" "~/.emacs.d/"))
     (org-roam-directory   . "~/org/notes/")
@@ -582,11 +583,15 @@
     (org-roam-complete-everywhere . t))
   )
 
-(require 'org-habit)
 (setq org-habit-show-all-today t)
 (setq org-clock-into-drawer t)
 
-
+(leaf org-journal
+  :ensure t
+  :require t
+  :custom
+  (org-journal-dir .  "~/org/journal/")
+  )
 
 
 
