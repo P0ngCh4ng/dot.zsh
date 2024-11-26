@@ -307,6 +307,13 @@
      )
     :hook ((lsp-mode-hook . lsp-ui-mode))
     ))
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+               '(dockerfile-mode . "dockerfile"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "docker-langserver")
+                    :major-modes '(dockerfile-mode)
+                    :server-id 'dockerfile-ls)))
 (leaf go-translate
   :ensure t
   :bind ("C-c t" . gts-do-translate)
@@ -666,3 +673,8 @@
             (when (org-at-heading-p)
               (org-schedule nil (format-time-string "%Y-%m-%d %H:%M:%S" 
                                                     (time-add time seconds))))))))))
+
+
+
+(leaf dockerfile-mode
+  :ensure t)
